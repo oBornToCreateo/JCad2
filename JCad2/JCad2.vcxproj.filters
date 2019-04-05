@@ -22,6 +22,12 @@
     <Filter Include="Header Files\Chiliutil">
       <UniqueIdentifier>{5bb75f8d-b646-4a98-8c0f-483b10f33161}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\InputDevices">
+      <UniqueIdentifier>{2bd44e58-9b42-473b-9d1c-725f285ad018}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\InputDevices">
+      <UniqueIdentifier>{75b71478-ab2d-4d50-ab5e-1d45c20c6709}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -34,12 +40,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ChiliException.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Keyboard.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Mouse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ChiliTimer.cpp">
@@ -57,21 +57,18 @@
     <ClCompile Include="JCMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Mouse.cpp">
+      <Filter>Source Files\InputDevices</Filter>
+    </ClCompile>
+    <ClCompile Include="Keyboard.cpp">
+      <Filter>Source Files\InputDevices</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowsMessageMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Window.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Keyboard.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Mouse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Graphics.h">
@@ -95,11 +92,15 @@
     <ClInclude Include="ChiliWin.h">
       <Filter>Header Files\Chiliutil</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="hw3d.rc">
+    <ClInclude Include="resource.h">
       <Filter>Resource Files</Filter>
-    </ResourceCompile>
+    </ClInclude>
+    <ClInclude Include="Keyboard.h">
+      <Filter>Header Files\InputDevices</Filter>
+    </ClInclude>
+    <ClInclude Include="Mouse.h">
+      <Filter>Header Files\InputDevices</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="DXGetErrorDescription.inl">
@@ -124,5 +125,10 @@
     <Image Include="JC2.ico">
       <Filter>Resource Files</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="JCad2.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

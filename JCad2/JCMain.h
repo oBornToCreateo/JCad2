@@ -9,8 +9,11 @@ public:
 	// master frame / message loop
 	int Go();
 private:
-	void DoFrame();
+	void ProcesImput();
+	void UpdateModel();
+	void Render();
 private:
 	Window wnd;
+	std::string ProjectName;
 	ChiliTimer timer;
 };
