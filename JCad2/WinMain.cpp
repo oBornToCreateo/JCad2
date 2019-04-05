@@ -17,7 +17,7 @@
 *	You should have received a copy of the GNU General Public License					  *
 *	along with The Chili Direct3D Engine.  If not, see <http://www.gnu.org/licenses/>.    *
 ******************************************************************************************/
-#include "App.h"
+#include "JCMain.h"
 
 
 int CALLBACK WinMain(
@@ -28,7 +28,7 @@ int CALLBACK WinMain(
 {
 	try
 	{
-		return App{}.Go();
+		return JCMain{}.Go();
 	}
 	catch( const ChiliException& e )
 	{

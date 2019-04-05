@@ -1,11 +1,11 @@
-#include "App.h"
+#include "JCMain.h"
 
-App::App()
+JCMain::JCMain()
 	:
-	wnd( 800,600,"The Donkey Fart Box" )
+	wnd( 1440,900,"  Jezier Cad 2" )
 {}
 
-int App::Go()
+int JCMain::Go()
 {
 	while( true )
 	{
@@ -19,7 +19,7 @@ int App::Go()
 	}
 }
 
-void App::DoFrame()
+void JCMain::DoFrame()
 {
 	const float c = sin( timer.Peek() ) / 2.0f + 0.5f;
 	wnd.Gfx().ClearBuffer( c,c,1.0f );

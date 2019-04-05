@@ -2,10 +2,10 @@
 #include "Window.h"
 #include "ChiliTimer.h"
 
-class App
+class JCMain
 {
 public:
-	App();
+	JCMain();
 	// master frame / message loop
 	int Go();
 private:

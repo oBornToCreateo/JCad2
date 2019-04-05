@@ -122,12 +122,12 @@ void Graphics::DrawTestTriangle( float angle )
 	// create vertex buffer (1 2d triangle at center of screen)
 	Vertex vertices[] =
 	{
-		{ 0.0f,0.5f,255,0,0,0 },
+		{ 0.0f,0.5f,0,255,0,0 },
 		{ 0.5f,-0.5f,0,255,0,0 },
-		{ -0.5f,-0.5f,0,0,255,0 },
+		{ -0.5f,-0.5f,0,255,0,0 },
 		{ -0.3f,0.3f,0,255,0,0 },
-		{ 0.3f,0.3f,0,0,255,0 },
-		{ 0.0f,-1.0f,255,0,0,0 },
+		{ 0.3f,0.3f,0,255,0,0 },
+		{ 0.0f,-1.0f,0,255,0,0 },
 	};
 	vertices[0].color.g = 255;
 	wrl::ComPtr<ID3D11Buffer> pVertexBuffer;
