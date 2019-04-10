@@ -79,7 +79,7 @@ Window::Window( int width,int height,const char* name )
 	wr.right = width + wr.left;
 	wr.top = 100;
 	wr.bottom = height + wr.top;
-	if( AdjustWindowRect( &wr,WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,FALSE ) == 0 )
+	if( AdjustWindowRect( &wr,WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,TRUE ) == 0 )
 	{
 		throw CHWND_LAST_EXCEPT();
 	}
@@ -172,10 +172,97 @@ LRESULT CALLBACK Window::HandleMsgThunk( HWND hWnd,UINT msg,WPARAM wParam,LPARAM
 	return pWnd->HandleMsg( hWnd,msg,wParam,lParam );
 }
 
+
+void Window::ShowMessageBox(const std::wstring& title, const std::wstring& message, UINT type) const
+{
+	MessageBoxW(hWnd, message.c_str(), title.c_str(), type);
+}
+
+
 LRESULT Window::HandleMsg( HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam ) noexcept
 {
 	switch( msg )
 	{
+
+
+	case WM_CREATE:
+	{
+		HMENU hMenu, hSubMenu;
+
+		hMenu = CreateMenu();
+
+		hSubMenu = CreatePopupMenu();
+		AppendMenuW(hMenu, MF_STRING | MF_POPUP, (UINT_PTR)hSubMenu, L"&File");
+		{
+			AppendMenuW(hSubMenu, MF_STRING, ID_FILE_EXIT, L"E&xit");
+		}
+
+		hSubMenu = CreatePopupMenu();
+
+		AppendMenuW(hMenu, MF_STRING | MF_POPUP, (UINT_PTR)hSubMenu, L"&Shapes");
+		{
+			AppendMenuW(hSubMenu, MF_STRING, ID_SHAPES_TwoPointCircle, L"&Circle from 2 points");
+			AppendMenuW(hSubMenu, MF_SEPARATOR, NULL, NULL);
+			AppendMenuW(hSubMenu, MF_STRING, ID_SHAPES_ThreePointCircle, L"&Circle from 3 points");
+			AppendMenuW(hSubMenu, MF_SEPARATOR, NULL, NULL);
+			AppendMenuW(hSubMenu, MF_STRING, ID_SHAPES_LineSegment, L"&Line Segment");
+			AppendMenuW(hSubMenu, MF_SEPARATOR, NULL, NULL);
+			AppendMenuW(hSubMenu, MF_STRING, ID_SHAPES_PoliLine, L"&PoliLine");
+			AppendMenuW(hSubMenu, MF_SEPARATOR, NULL, NULL);
+			AppendMenuW(hSubMenu, MF_STRING, ID_SHAPES_BezierCurve, L"&Bezier Curve");
+					  
+		}
+
+
+
+		SetMenu(hWnd, hMenu);
+
+		break;
+	}
+	case WM_COMMAND:
+	{
+		switch (LOWORD(wParam))
+		{
+		case ID_FILE_EXIT:
+
+			PostMessage(hWnd, WM_CLOSE, 0, 0);
+			break;
+		case ID_SHAPES_TwoPointCircle:
+			ShapeState = MWShapeState::TwoPointCircle;
+			ShowMessageBox(L"Info", L"2 Point Circle");
+
+			break;
+
+		case ID_SHAPES_ThreePointCircle:
+			ShapeState = MWShapeState::ThreePointCircle;
+			ShowMessageBox(L"Info", L"3 Point Circle");
+
+			break;
+
+
+		case ID_SHAPES_LineSegment:
+			ShapeState = MWShapeState::LineSegment;
+			ShowMessageBox(L"Info", L"Create line Segment");
+
+			break;
+
+		case ID_SHAPES_PoliLine:
+			ShapeState = MWShapeState::PoliLine;
+			ShowMessageBox(L"Info", L" Create PoliLine");
+
+			break;
+
+		case ID_SHAPES_BezierCurve:
+			ShapeState = MWShapeState::BezierCurve;
+			ShowMessageBox(L"Info", L"Create 3 point Bezier Curve");
+
+			break;
+
+		}
+		break;
+	}
+
+
 	// we don't want the DefProc to handle this message because
 	// we want our destructor to destroy the window, so return 0 instead of break
 	case WM_CLOSE:

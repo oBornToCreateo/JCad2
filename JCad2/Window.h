@@ -75,8 +75,11 @@ public:
 	Window( const Window& ) = delete;
 	Window& operator=( const Window& ) = delete;
 	void SetTitle( const std::string& title );
+	void ShowMessageBox(const std::wstring& title, const std::wstring& message, UINT type = MB_OK) const;
+
 	static std::optional<int> ProcessMessages() noexcept;
 	Graphics& Gfx();
+
 private:
 	static LRESULT CALLBACK HandleMsgSetup( HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam ) noexcept;
 	static LRESULT CALLBACK HandleMsgThunk( HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam ) noexcept;
@@ -84,6 +87,19 @@ private:
 public:
 	Keyboard kbd;
 	Mouse mouse;
+
+
+	enum class MWShapeState
+	{
+		Null,
+		TwoPointCircle,
+		ThreePointCircle,
+		LineSegment,
+		PoliLine,
+		BezierCurve,
+		Count
+	};
+	MWShapeState ShapeState = MWShapeState::Null;
 private:
 	int width;
 	int height;

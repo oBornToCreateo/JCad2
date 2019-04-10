@@ -14,3 +14,11 @@
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
+
+#define ID_FILE_EXIT				9000
+#define ID_SHAPES_TwoPointCircle	9001
+#define ID_SHAPES_ThreePointCircle	9002
+#define ID_SHAPES_LineSegment		9003
+#define ID_SHAPES_PoliLine			9004
+#define ID_SHAPES_BezierCurve		9005
+

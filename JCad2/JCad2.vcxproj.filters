@@ -28,31 +28,19 @@
     <Filter Include="Source Files\InputDevices">
       <UniqueIdentifier>{75b71478-ab2d-4d50-ab5e-1d45c20c6709}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Graphics/Window">
+      <UniqueIdentifier>{cd7c253e-dfd7-4ecd-ac13-d0e70f472e28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphics">
+      <UniqueIdentifier>{a18d44fb-7ffa-4091-975b-a40b275c5a4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ChiliUtil">
+      <UniqueIdentifier>{abd7887a-3022-4438-bacd-47513e402800}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="WinMain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WindowsMessageMap.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Window.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ChiliException.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ChiliTimer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="dxerr.cpp">
       <Filter>Dxerr</Filter>
-    </ClCompile>
-    <ClCompile Include="DxgiInfoManager.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="JCMain.cpp">
       <Filter>Source Files</Filter>
@@ -63,22 +51,31 @@
     <ClCompile Include="Keyboard.cpp">
       <Filter>Source Files\InputDevices</Filter>
     </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="ChiliTimer.cpp">
+      <Filter>Source Files\ChiliUtil</Filter>
+    </ClCompile>
+    <ClCompile Include="ChiliException.cpp">
+      <Filter>Source Files\ChiliUtil</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowsMessageMap.cpp">
+      <Filter>Source Files\ChiliUtil</Filter>
+    </ClCompile>
+    <ClCompile Include="DxgiInfoManager.cpp">
+      <Filter>Source Files\ChiliUtil</Filter>
+    </ClCompile>
+    <ClCompile Include="WinMain.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="WindowsMessageMap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Window.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="dxerr.h">
       <Filter>Dxerr</Filter>
-    </ClInclude>
-    <ClInclude Include="DxgiInfoManager.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="JCMain.h">
       <Filter>Header Files</Filter>
@@ -100,6 +97,18 @@
     </ClInclude>
     <ClInclude Include="Mouse.h">
       <Filter>Header Files\InputDevices</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics.h">
+      <Filter>Header Files\Graphics/Window</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowsMessageMap.h">
+      <Filter>Header Files\Graphics/Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Header Files\Graphics/Window</Filter>
+    </ClInclude>
+    <ClInclude Include="DxgiInfoManager.h">
+      <Filter>Header Files\Graphics/Window</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

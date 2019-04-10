@@ -16,6 +16,7 @@ int JCMain::Go()
 		}
 		ProcesImput();
 		UpdateModel();
+		wnd.Gfx().ClearBuffer(0.0f, 0.0f, 0.0f);
 		Render();
 		wnd.Gfx().EndFrame();
 
@@ -30,12 +31,11 @@ void JCMain::ProcesImput()
 
 void JCMain::UpdateModel()
 {
-	const float c = sin(timer.Peek()) / 2.0f + 0.5f;
-	wnd.Gfx().ClearBuffer(c, c, 1.0f);
-	wnd.Gfx().DrawTestTriangle(timer.Peek());
+	
 }
 
 void JCMain::Render()
 {
+	wnd.Gfx().DrawTestTriangle(timer.Peek());
 
 }
