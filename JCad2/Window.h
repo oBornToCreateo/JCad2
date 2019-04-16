@@ -20,6 +20,7 @@
 #pragma once
 #include "ChiliWin.h"
 #include "ChiliException.h"
+//#include "JC_Menu.h"
 #include "Keyboard.h"
 #include "Mouse.h"
 #include "Graphics.h"
@@ -87,19 +88,7 @@ private:
 public:
 	Keyboard kbd;
 	Mouse mouse;
-
-
-	enum class MWShapeState
-	{
-		Null,
-		TwoPointCircle,
-		ThreePointCircle,
-		LineSegment,
-		PoliLine,
-		BezierCurve,
-		Count
-	};
-	MWShapeState ShapeState = MWShapeState::Null;
+	//JC_Menu menu;
 private:
 	int width;
 	int height;

@@ -73,22 +73,27 @@ Window::Window( int width,int height,const char* name )
 	width( width ),
 	height( height )
 {
-	// calculate window size based on desired client region size
 	RECT wr;
+	// calculate window size based on desired client region size
+	
 	wr.left = 100;
 	wr.right = width + wr.left;
 	wr.top = 100;
 	wr.bottom = height + wr.top;
-	if( AdjustWindowRect( &wr,WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,TRUE ) == 0 )
+	if (AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, TRUE) == 0)
 	{
 		throw CHWND_LAST_EXCEPT();
 	}
+	
+		
+	
 	// create window & get hWnd
-	hWnd = CreateWindow(
-		WindowClass::GetName(),name,
-		WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
-		CW_USEDEFAULT,CW_USEDEFAULT,wr.right - wr.left,wr.bottom - wr.top,
-		nullptr,nullptr,WindowClass::GetInstance(),this
+	hWnd = CreateWindow
+	(
+		WindowClass::GetName(), name,
+		WS_CAPTION | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_SYSMENU,
+		CW_USEDEFAULT, CW_USEDEFAULT, wr.right - wr.left, wr.bottom - wr.top,
+		nullptr, nullptr, WindowClass::GetInstance(), this
 	);
 	// check for error
 	if( hWnd == nullptr )
@@ -181,190 +186,235 @@ void Window::ShowMessageBox(const std::wstring& title, const std::wstring& messa
 
 LRESULT Window::HandleMsg( HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam ) noexcept
 {
+	// flags for maximization
+	static bool s_in_sizemove = false;
+	static bool s_minimized = false;
+
+
 	switch( msg )
 	{
-
-
-	case WM_CREATE:
-	{
-		HMENU hMenu, hSubMenu;
-
-		hMenu = CreateMenu();
-
-		hSubMenu = CreatePopupMenu();
-		AppendMenuW(hMenu, MF_STRING | MF_POPUP, (UINT_PTR)hSubMenu, L"&File");
+		case WM_CREATE:
 		{
-			AppendMenuW(hSubMenu, MF_STRING, ID_FILE_EXIT, L"E&xit");
-		}
+			HMENU hMenu, hSubMenu;
 
-		hSubMenu = CreatePopupMenu();
+			hMenu = CreateMenu();
 
-		AppendMenuW(hMenu, MF_STRING | MF_POPUP, (UINT_PTR)hSubMenu, L"&Shapes");
-		{
-			AppendMenuW(hSubMenu, MF_STRING, ID_SHAPES_TwoPointCircle, L"&Circle from 2 points");
-			AppendMenuW(hSubMenu, MF_SEPARATOR, NULL, NULL);
-			AppendMenuW(hSubMenu, MF_STRING, ID_SHAPES_ThreePointCircle, L"&Circle from 3 points");
-			AppendMenuW(hSubMenu, MF_SEPARATOR, NULL, NULL);
-			AppendMenuW(hSubMenu, MF_STRING, ID_SHAPES_LineSegment, L"&Line Segment");
-			AppendMenuW(hSubMenu, MF_SEPARATOR, NULL, NULL);
-			AppendMenuW(hSubMenu, MF_STRING, ID_SHAPES_PoliLine, L"&PoliLine");
-			AppendMenuW(hSubMenu, MF_SEPARATOR, NULL, NULL);
-			AppendMenuW(hSubMenu, MF_STRING, ID_SHAPES_BezierCurve, L"&Bezier Curve");
-					  
-		}
-
-
-
-		SetMenu(hWnd, hMenu);
-
-		break;
-	}
-	case WM_COMMAND:
-	{
-		switch (LOWORD(wParam))
-		{
-		case ID_FILE_EXIT:
-
-			PostMessage(hWnd, WM_CLOSE, 0, 0);
-			break;
-		case ID_SHAPES_TwoPointCircle:
-			ShapeState = MWShapeState::TwoPointCircle;
-			ShowMessageBox(L"Info", L"2 Point Circle");
-
-			break;
-
-		case ID_SHAPES_ThreePointCircle:
-			ShapeState = MWShapeState::ThreePointCircle;
-			ShowMessageBox(L"Info", L"3 Point Circle");
-
-			break;
-
-
-		case ID_SHAPES_LineSegment:
-			ShapeState = MWShapeState::LineSegment;
-			ShowMessageBox(L"Info", L"Create line Segment");
-
-			break;
-
-		case ID_SHAPES_PoliLine:
-			ShapeState = MWShapeState::PoliLine;
-			ShowMessageBox(L"Info", L" Create PoliLine");
-
-			break;
-
-		case ID_SHAPES_BezierCurve:
-			ShapeState = MWShapeState::BezierCurve;
-			ShowMessageBox(L"Info", L"Create 3 point Bezier Curve");
-
-			break;
-
-		}
-		break;
-	}
-
-
-	// we don't want the DefProc to handle this message because
-	// we want our destructor to destroy the window, so return 0 instead of break
-	case WM_CLOSE:
-		PostQuitMessage( 0 );
-		return 0;
-	// clear keystate when window loses focus to prevent input getting "stuck"
-	case WM_KILLFOCUS:
-		kbd.ClearState();
-		break;
-
-	/*********** KEYBOARD MESSAGES ***********/
-	case WM_KEYDOWN:
-	// syskey commands need to be handled to track ALT key (VK_MENU) and F10
-	case WM_SYSKEYDOWN:
-		if( !(lParam & 0x40000000) || kbd.AutorepeatIsEnabled() ) // filter autorepeat
-		{
-			kbd.OnKeyPressed( static_cast<unsigned char>(wParam) );
-		}
-		break;
-	case WM_KEYUP:
-	case WM_SYSKEYUP:
-		kbd.OnKeyReleased( static_cast<unsigned char>(wParam) );
-		break;
-	case WM_CHAR:
-		kbd.OnChar( static_cast<unsigned char>(wParam) );
-		break;
-	/*********** END KEYBOARD MESSAGES ***********/
-
-	/************* MOUSE MESSAGES ****************/
-	case WM_MOUSEMOVE:
-	{
-		const POINTS pt = MAKEPOINTS( lParam );
-		// in client region -> log move, and log enter + capture mouse (if not previously in window)
-		if( pt.x >= 0 && pt.x < width && pt.y >= 0 && pt.y < height )
-		{
-			mouse.OnMouseMove( pt.x,pt.y );
-			if( !mouse.IsInWindow() )
+			hSubMenu = CreatePopupMenu();
+			AppendMenuW(hMenu, MF_STRING | MF_POPUP, (UINT_PTR)hSubMenu, L"&File");
 			{
-				SetCapture( hWnd );
-				mouse.OnMouseEnter();
+				AppendMenuW(hSubMenu, MF_STRING, 
+							ID_FILE_EXIT,
+							L"E&xit");
 			}
+
+			hSubMenu = CreatePopupMenu();
+
+			AppendMenuW(hMenu, MF_STRING | MF_POPUP, (UINT_PTR)hSubMenu, L"&Shapes");
+			{
+				//B1
+				AppendMenuW(hSubMenu, MF_STRING, 
+							ID_SHAPES_TwoPointCircle,
+							L"&Circle from 2 points");
+
+				AppendMenuW(hSubMenu, MF_SEPARATOR, NULL, NULL);
+
+				//B2
+				AppendMenuW(hSubMenu, MF_STRING, 
+							ID_SHAPES_ThreePointCircle,
+							L"&Circle from 3 points");
+
+				AppendMenuW(hSubMenu, MF_SEPARATOR, NULL, NULL);
+				
+				//B3
+				AppendMenuW(hSubMenu, MF_STRING, 
+							ID_SHAPES_PoliLine,
+							L"&Line Segment");
+
+				AppendMenuW(hSubMenu, MF_SEPARATOR, NULL, NULL);
+
+				//B4
+				AppendMenuW(hSubMenu, MF_STRING,
+							ID_SHAPES_BezierCurve,
+							L"&Bezier Curve");
+						  
+			}
+
+			SetMenu(hWnd, hMenu);
+
+			break;
 		}
-		// not in client -> log move / maintain capture if button down
-		else
+		case WM_COMMAND:
 		{
-			if( wParam & (MK_LBUTTON | MK_RBUTTON) )
+			switch (LOWORD(wParam))
+			{
+			case ID_FILE_EXIT:
+
+				PostMessage(hWnd, WM_CLOSE, 0, 0);
+				break;
+				//Type of shape messages
+
+				// Shape Messages
+			}
+			break;
+		}
+
+
+		// we don't want the DefProc to handle this message because
+		// we want our destructor to destroy the window, so return 0 instead of break
+		case WM_CLOSE:
+			PostQuitMessage( 0 );
+			return 0;
+		// clear keystate when window loses focus to prevent input getting "stuck"
+		case WM_KILLFOCUS:
+			kbd.ClearState();
+			break;
+
+		/*********** KEYBOARD MESSAGES ***********/
+		case WM_KEYDOWN:
+		// syskey commands need to be handled to track ALT key (VK_MENU) and F10
+		case WM_SYSKEYDOWN:
+			if( !(lParam & 0x40000000) || kbd.AutorepeatIsEnabled() ) // filter autorepeat
+			{
+				kbd.OnKeyPressed( static_cast<unsigned char>(wParam) );
+			}
+			break;
+		case WM_KEYUP:
+		case WM_SYSKEYUP:
+			kbd.OnKeyReleased( static_cast<unsigned char>(wParam) );
+			break;
+		case WM_CHAR:
+			kbd.OnChar( static_cast<unsigned char>(wParam) );
+			break;
+		/*********** END KEYBOARD MESSAGES ***********/
+
+		/************* MOUSE MESSAGES ****************/
+		case WM_MOUSEMOVE:
+		{
+			const POINTS pt = MAKEPOINTS( lParam );
+			// in client region -> log move, and log enter + capture mouse (if not previously in window)
+			if( pt.x >= 0 && pt.x < width && pt.y >= 0 && pt.y < height )
 			{
 				mouse.OnMouseMove( pt.x,pt.y );
+				if( !mouse.IsInWindow() )
+				{
+					SetCapture( hWnd );
+					mouse.OnMouseEnter();
+				}
 			}
-			// button up -> release capture / log event for leaving
+			// not in client -> log move / maintain capture if button down
 			else
+			{
+				if( wParam & (MK_LBUTTON | MK_RBUTTON) )
+				{
+					mouse.OnMouseMove( pt.x,pt.y );
+				}
+				// button up -> release capture / log event for leaving
+				else
+				{
+					ReleaseCapture();
+					mouse.OnMouseLeave();
+				}
+			}
+			break;
+		}
+		case WM_LBUTTONDOWN:
+		{
+			const POINTS pt = MAKEPOINTS( lParam );
+			mouse.OnLeftPressed( pt.x,pt.y );
+			break;
+		}
+		case WM_RBUTTONDOWN:
+		{
+			const POINTS pt = MAKEPOINTS( lParam );
+			mouse.OnRightPressed( pt.x,pt.y );
+			break;
+		}
+		case WM_LBUTTONUP:
+		{
+			const POINTS pt = MAKEPOINTS( lParam );
+			mouse.OnLeftReleased( pt.x,pt.y );
+			// release mouse if outside of window
+			if( pt.x < 0 || pt.x >= width || pt.y < 0 || pt.y >= height )
 			{
 				ReleaseCapture();
 				mouse.OnMouseLeave();
 			}
+			break;
 		}
-		break;
-	}
-	case WM_LBUTTONDOWN:
-	{
-		const POINTS pt = MAKEPOINTS( lParam );
-		mouse.OnLeftPressed( pt.x,pt.y );
-		break;
-	}
-	case WM_RBUTTONDOWN:
-	{
-		const POINTS pt = MAKEPOINTS( lParam );
-		mouse.OnRightPressed( pt.x,pt.y );
-		break;
-	}
-	case WM_LBUTTONUP:
-	{
-		const POINTS pt = MAKEPOINTS( lParam );
-		mouse.OnLeftReleased( pt.x,pt.y );
-		// release mouse if outside of window
-		if( pt.x < 0 || pt.x >= width || pt.y < 0 || pt.y >= height )
+		case WM_RBUTTONUP:
 		{
-			ReleaseCapture();
-			mouse.OnMouseLeave();
+			const POINTS pt = MAKEPOINTS( lParam );
+			mouse.OnRightReleased( pt.x,pt.y );
+			// release mouse if outside of window
+			if( pt.x < 0 || pt.x >= width || pt.y < 0 || pt.y >= height )
+			{
+				ReleaseCapture();
+				mouse.OnMouseLeave();
+			}
+			break;
 		}
-		break;
-	}
-	case WM_RBUTTONUP:
-	{
-		const POINTS pt = MAKEPOINTS( lParam );
-		mouse.OnRightReleased( pt.x,pt.y );
-		// release mouse if outside of window
-		if( pt.x < 0 || pt.x >= width || pt.y < 0 || pt.y >= height )
+		case WM_MOUSEWHEEL:
 		{
-			ReleaseCapture();
-			mouse.OnMouseLeave();
+			const POINTS pt = MAKEPOINTS( lParam );
+			const int delta = GET_WHEEL_DELTA_WPARAM( wParam );
+			mouse.OnWheelDelta( pt.x,pt.y,delta );
+			break;
 		}
+		/************** END MOUSE MESSAGES **************/
+
+		/********* START OF MAXIMIZE MESSAGES *********/
+		case WM_SIZE:
+		{
+
+		case SIZE_MAXIMIZED:
+							
+			if (wParam == SIZE_MINIMIZED)
+			{
+				// The window was minimized (you should probably suspend the application)
+				if (!s_minimized)
+				{
+					s_minimized = true;
+				}
+			}
+			else if (s_minimized)
+			{
+				// The window was minimized and is now restored (resume from suspend)
+				s_minimized = false;
+			}
+			else if (!s_in_sizemove)
+			{
+				//handle the swapchain resize for maximize or unmaximize
+				pGfx->ResizeBuffer(hWnd);
+				
+			}
+			break;
+
+		case WM_ENTERSIZEMOVE:
+			// We want to avoid trying to resizing the swapchain as 
+			//the user does the 'rubber band' resize
+			s_in_sizemove = true;
+			break;
+
+		case WM_EXITSIZEMOVE:
+			s_in_sizemove = false;
+			// Here is the other place where you handle the 
+			//swapchain resize after the user stops using the 'rubber-band' 
+			break;
+
+		case WM_GETMINMAXINFO:
+		{
+			// We want to prevent the window from being set too tiny
+			auto info = reinterpret_cast<MINMAXINFO*>(lParam);
+			info->ptMinTrackSize.x = 320;
+			info->ptMinTrackSize.y = 200;
+		}
+			
+
+		return 1;
+		}
+
+		/********* END OF MAXIMIZE MESSAGES *********/
 		break;
-	}
-	case WM_MOUSEWHEEL:
-	{
-		const POINTS pt = MAKEPOINTS( lParam );
-		const int delta = GET_WHEEL_DELTA_WPARAM( wParam );
-		mouse.OnWheelDelta( pt.x,pt.y,delta );
-		break;
-	}
-	/************** END MOUSE MESSAGES **************/
 	}
 
 	return DefWindowProc( hWnd,msg,wParam,lParam );

@@ -95,9 +95,6 @@
     <ClInclude Include="Keyboard.h">
       <Filter>Header Files\InputDevices</Filter>
     </ClInclude>
-    <ClInclude Include="Mouse.h">
-      <Filter>Header Files\InputDevices</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics.h">
       <Filter>Header Files\Graphics/Window</Filter>
     </ClInclude>
@@ -109,6 +106,9 @@
     </ClInclude>
     <ClInclude Include="DxgiInfoManager.h">
       <Filter>Header Files\Graphics/Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Mouse.h">
+      <Filter>Header Files\InputDevices</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

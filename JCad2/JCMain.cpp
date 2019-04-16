@@ -2,8 +2,10 @@
 
 JCMain::JCMain()
 	:
-	wnd( 1440,900,"  Jezier Cad 2" )
+	wnd(1440,900,"  Jezier Cad 2" )
 {}
+
+
 int JCMain::Go()
 {
 	while( true )
@@ -16,7 +18,7 @@ int JCMain::Go()
 		}
 		ProcesImput();
 		UpdateModel();
-		wnd.Gfx().ClearBuffer(0.0f, 0.0f, 0.0f);
+		wnd.Gfx().ClearBuffer(0.8f, 0.8f, 0.8f);
 		Render();
 		wnd.Gfx().EndFrame();
 
@@ -27,15 +29,17 @@ int JCMain::Go()
 
 void JCMain::ProcesImput()
 {
+
 }
 
 void JCMain::UpdateModel()
 {
-	
+//	wnd.menu.Update();
 }
 
 void JCMain::Render()
 {
 	wnd.Gfx().DrawTestTriangle(timer.Peek());
+	//wnd.menu.Draw();
 
 }
