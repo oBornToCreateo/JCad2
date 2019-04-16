@@ -88,7 +88,7 @@ private:
 public:
 	Keyboard kbd;
 	Mouse mouse;
-	//JC_Menu menu;
+
 private:
 	int width;
 	int height;
